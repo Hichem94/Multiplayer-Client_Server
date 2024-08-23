@@ -3,7 +3,7 @@ from _thread import *
 import sys
 
 
-server = "192.168.0.69"
+server = "172.19.196.199"
 port   = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -20,7 +20,7 @@ print("Waiting for connection, Server Started")
 
 
 def threaded_client(conn):
-    
+    conn.send(str.encode("Connected"))
     reply = ""
     while True:
         try:
@@ -37,7 +37,9 @@ def threaded_client(conn):
             conn.sendall(str.encode(reply))
         except:
             break
-
+        
+    print("Lost connection")
+    conn.close()
 
 while True:
     conn, addr = s.accept() # accept any incomming connections
