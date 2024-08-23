@@ -34,16 +34,19 @@ class Player():
 
         self.rect = (self.x, self.y, self.width, self.height)
 
-def redrawWindow(win, player):
+
+def redrawWindow(win, player1, player2):
     win.fill((255,255,255))
-    player.draw(win)
+    player1.draw(win)
+    player2.draw(win)
     pygame.display.update()
 
 
 
 def main():
     run = True
-    p = Player(50,50,100,100,(0,255,0))
+    p  = Player(50,50,100,100,(0,255,0))
+    p2 = Player(200,200,100,100,(0,0,255))
     clock = pygame.time.Clock()
     
     while run:
@@ -54,6 +57,7 @@ def main():
                 pygame.quit()
 
         p.move()
+        p2.move()
         redrawWindow(win, p)
     
     pygame.display.update()
