@@ -23,6 +23,13 @@ class Network():
     def send(self, data):
         try:
             self.client.send(pickle.dumps(data))
+            return pickle.loads(self.client.recv(2048*2))
+        except socket.error as e:
+            print(e)
+    
+    def receiv(self):
+        try:
+            print("ici")
             return pickle.loads(self.client.recv(2048))
         except socket.error as e:
             print(e)

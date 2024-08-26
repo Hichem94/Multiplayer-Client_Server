@@ -3,6 +3,7 @@ from _thread import *
 import sys
 from player import Player
 import pickle
+from game import Game
 
 server = "172.19.196.199"
 port   = 5555
@@ -20,14 +21,20 @@ s.listen(2) # I only want two people to be able to connect to my server
 print("Waiting for connection, Server Started")
 
 
+games = {}
+idCount_players = 0
+twoPlayers = False
 players = [Player(0,0,50,50,(255,0,0)), Player(100,100,50,50,(0,0,255))]
 
-def threaded_client(conn, player):
-    conn.send( pickle.dumps(players[player]) )
+def threaded_client(conn, player, gameId):
+    global idCount_players
+    
+    conn.send( pickle.dumps( (players[player]) ))
     reply = ""
     while True:
         try:
-            data = pickle.loads(conn.recv(2048)) # amount of informations we want to recv
+            data = pickle.loads(conn.recv(2048)) # amount of informations we want to recv   
+        
             players[player] = data
 
             if not data:
@@ -42,7 +49,9 @@ def threaded_client(conn, player):
                 print("Received: ", data)
                 print("Sending : ", reply)
 
-            conn.sendall( pickle.dumps(reply) )
+            tup = (reply, games[gameId])
+            conn.sendall(pickle.dumps(tup))
+            #conn.sendall(pickle.dumps(games[gameId]))
         except:
             break
         
@@ -50,12 +59,21 @@ def threaded_client(conn, player):
     conn.close()
 
 
-currentPlayer = 0
 while True:
     conn, addr = s.accept() # accept any incomming connections
     print("Connected to:", addr)
 
-    start_new_thread(threaded_client, (conn, currentPlayer))
-    currentPlayer += 1
+    idCount_players += 1
+    p = 0
+    gameId = (idCount_players - 1)//2
+    if idCount_players % 2 == 1:
+        games[gameId] = Game(gameId)
+        print("Creating a new game...")
+    else:
+        games[gameId].ready = True
+        p = 1
+
+    start_new_thread(threaded_client, (conn, p, gameId))
+
 
 
