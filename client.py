@@ -1,5 +1,6 @@
 import pygame
 from network import Network
+from player import Player
 
 width  = 500
 height = 500
@@ -9,34 +10,6 @@ pygame.display.set_caption("Client")
 
 clientNumber = 0
 
-class Player():
-    def __init__(self, x, y, width, height, color):
-        self.x = x
-        self.y = y
-        self.width  = width
-        self.height = height
-        self.color  = color
-        self.rect = (x,y,width,height)
-        self.vel = 3
-
-    def draw(self, win):
-        pygame.draw.rect(win, self.color, self.rect)
-    
-    def move(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_UP]:
-            self.y -= self.vel
-        if keys[pygame.K_DOWN]:
-            self.y += self.vel
-        if keys[pygame.K_LEFT]:
-            self.x -= self.vel
-        if keys[pygame.K_RIGHT]:
-            self.x += self.vel
-
-        self.update()
-
-    def update(self):    
-        self.rect = (self.x, self.y, self.width, self.height)
 
 
 def read_pos(s):
@@ -58,7 +31,7 @@ def main():
     n = Network()
     startPos = read_pos(n.getPos())
     p1 = Player(startPos[0],startPos[1],100,100,(0,255,0))
-    p2 = Player(0,0,100,100,(0,255,0))
+    p2 = Player(0,0,100,100,(0,0,255))
     clock = pygame.time.Clock()
     
     while run:
@@ -67,13 +40,13 @@ def main():
         p2.x = p2Pos[0]
         p2.y = p2Pos[1]
         p2.update()
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
 
         p1.move()
-        p2.move()
         redrawWindow(win, p1, p2)
     
     pygame.display.update()

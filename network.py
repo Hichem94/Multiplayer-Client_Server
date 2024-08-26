@@ -1,8 +1,7 @@
 import socket
 
 
-
-class Network():
+class Network:
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server = "172.19.196.199" #wsl hostname -I
@@ -26,7 +25,4 @@ class Network():
             return self.client.recv(2048).decode()
         except socket.error as e:
             print(e)
-
-n = Network()
-
 
