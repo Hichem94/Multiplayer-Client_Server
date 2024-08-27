@@ -1,6 +1,7 @@
 import pygame
 from network import Network
 from player import Player
+from game import Game
 
 width  = 500
 height = 500
@@ -32,17 +33,17 @@ def main():
 
     while run:
         clock.tick(60)
-        tup = n.send(p1)
-        p2 = tup[0]
+        tup  = n.send(p1)
+        p2   = tup[0]
         game = tup[1]
-        print(p2)
-        #print("GAME ID = " + str(game.getID()) + " GAME READY = " + str(game.getReady()))
+    
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
 
-        p1.move()
+        if game.getReady():
+            p1.move()
         redrawWindow(win, p1, p2, game)
     
     pygame.display.update()

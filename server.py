@@ -51,7 +51,7 @@ def threaded_client(conn, player, gameId):
 
             tup = (reply, games[gameId])
             conn.sendall(pickle.dumps(tup))
-            #conn.sendall(pickle.dumps(games[gameId]))
+
         except:
             break
         
